@@ -24,30 +24,14 @@ export default ({ elements }) => {
         setAutoplayEnabled(false);
     };
 
-    useEffect(() => {
-        if (autoplayEnabled) {
-            const id = setInterval(() => {
-                swipe('right');
-            }, 2000);
-            setAutoPlay(id);
-        } else {
-            clearInterval(autoPlay); // Clear the interval when autoplay is disabled
-        }
-
-        // Clean up the setInterval when the component unmounts
-        return () => clearInterval(autoPlay);
-    }, [autoplayEnabled]); // Run whenever autoplayEnabled changes // Run whenever autoplayEnabled changesutoplayEnabled]); // Run whenever autoplayEnabled changes
-
 
     const swipe = (direction) => {
         const wrapper = document.querySelector('.wrapper');
         if (isSwiping) return
         console.log('swiping')
         setIsSwiping(b => b = true);
-
         let offset = direction === 'right' ? 1 : -1;
         let newValue = active + offset;
-        console.log(active, newValue)
         //can accept numbers or strings
         if (!isNaN(direction)) {
             newValue = direction
@@ -67,6 +51,28 @@ export default ({ elements }) => {
             }
         });
     }
+
+
+    useEffect(() => {
+        let id;
+        if (autoplayEnabled) {
+            let count = 0;
+            id = setInterval(() => {
+                count++;
+                if (count > elements.length) {
+                    count = 1
+                }
+                swipe(count);
+            }, 2000);
+            setAutoPlay(id);
+        } else {
+            clearInterval(autoPlay); // Clear the interval when autoplay is disabled
+        }
+
+        // Clean up the setInterval when the component unmounts
+        return () => clearInterval(id); // Use id here instead of autoPlay
+    }, [autoplayEnabled]);
+
 
 
 
