@@ -1,13 +1,10 @@
 import pokemonArray from "./Data";
+import Carousel from "./components/Carousel";
 
 const app = () => {
   return (
     <>
-      {
-        pokemonArray.map(p => {
-          return <img src={p.Image}></img>
-        })
-      }
+      <Carousel elements={pokemonArray}></Carousel>
     </>
   )
 }
