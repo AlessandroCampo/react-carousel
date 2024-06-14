@@ -1,22 +1,54 @@
-import { BsFillArrowLeftCircleFill as ArrowLeft, BsFillArrowRightCircleFill as ArrowRight, BsDot as Bullet } from "react-icons/bs";
+import { BsFillArrowLeftCircleFill as ArrowLeft, BsFillArrowRightCircleFill as ArrowRight, BsDot as Bullet, BsPauseCircleFill as Pause, BsPlayCircleFill as Play } from "react-icons/bs";
 import './Carousel.scss'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import gsap from 'gsap';
 import { ScrollToPlugin } from "gsap/all";
 import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(ScrollToPlugin);
 
-
+//NOTE - MAKE SURE EVERTY ELEMENT NAME IS UNIQUE
 
 export default ({ elements }) => {
 
     const [active, setActive] = useState(0);
+    const [isSwiping, setIsSwiping] = useState(false);
+    const [autoplayEnabled, setAutoplayEnabled] = useState(true);
+    const [autoPlay, setAutoPlay] = useState(null)
+
+    const startAutoplay = () => {
+        setAutoplayEnabled(true);
+    };
+
+    const stopAutoplay = () => {
+        setAutoplayEnabled(false);
+    };
+
+    useEffect(() => {
+        if (autoplayEnabled) {
+            const id = setInterval(() => {
+                swipe('right');
+            }, 2000);
+            setAutoPlay(id);
+        } else {
+            clearInterval(autoPlay); // Clear the interval when autoplay is disabled
+        }
+
+        // Clean up the setInterval when the component unmounts
+        return () => clearInterval(autoPlay);
+    }, [autoplayEnabled]); // Run whenever autoplayEnabled changes // Run whenever autoplayEnabled changesutoplayEnabled]); // Run whenever autoplayEnabled changes
+
 
     const swipe = (direction) => {
         const wrapper = document.querySelector('.wrapper');
+        if (isSwiping) return
+        console.log('swiping')
+        setIsSwiping(b => b = true);
+
         let offset = direction === 'right' ? 1 : -1;
         let newValue = active + offset;
+        console.log(active, newValue)
+        //can accept numbers or strings
         if (!isNaN(direction)) {
             newValue = direction
         }
@@ -25,19 +57,31 @@ export default ({ elements }) => {
         } else if (newValue < 0) {
             newValue = elements.length - 1;
         }
-        setActive(newValue);
+        setActive(a => a = newValue);
         gsap.to(wrapper, {
             scrollTo: `#${elements[newValue].Name}`,
             duration: 0.75,
-            ease: 'power2.out'
+            ease: 'power2.out',
+            onComplete: () => {
+                setIsSwiping(b => b = false);
+            }
         });
     }
+
+
 
     return (
         <>
             <div className="carousel-group relative">
-                <ArrowLeft className="arrow left-[-50px]" onClick={() => swipe('left')}></ArrowLeft>
-                <div className="wrapper aspect-video h-[500px] flex overflow-x-scroll rounded-3xl" >
+                <ArrowLeft className="icon  top-1/2 left-[-50px]" onClick={() => swipe('left')}></ArrowLeft>
+                {
+                    autoplayEnabled ?
+                        <Pause className=" top-10 right-10 icon z-20" onClick={stopAutoplay}></Pause> :
+                        <Play className=" top-10 right-10 icon z-20" onClick={startAutoplay}></Play>
+
+                }
+
+                <div className="wrapper aspect-video h-[500px] flex overflow-x-scroll rounded-3xl relative" >
                     {elements.map(el => (
                         <figure
                             key={el.Name}
@@ -63,7 +107,7 @@ export default ({ elements }) => {
                         </Bullet>
                     })}
                 </div>
-                <ArrowRight className="arrow right-[-50px]" onClick={() => swipe('right')}></ArrowRight>
+                <ArrowRight className="icon  top-1/2 right-[-50px]" onClick={() => swipe('right')}></ArrowRight>
             </div>
 
 
