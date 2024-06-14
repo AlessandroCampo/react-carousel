@@ -1,5 +1,4 @@
-import { BsFillArrowLeftCircleFill as ArrowLeft } from "react-icons/bs";
-import { BsFillArrowRightCircleFill as ArrowRight } from "react-icons/bs";
+import { BsFillArrowLeftCircleFill as ArrowLeft, BsFillArrowRightCircleFill as ArrowRight, BsDot as Bullet } from "react-icons/bs";
 import './Carousel.scss'
 import { useState } from "react";
 import gsap from 'gsap';
@@ -18,6 +17,9 @@ export default ({ elements }) => {
         const wrapper = document.querySelector('.wrapper');
         let offset = direction === 'right' ? 1 : -1;
         let newValue = active + offset;
+        if (!isNaN(direction)) {
+            newValue = direction
+        }
         if (newValue >= elements.length) {
             newValue = 0;
         } else if (newValue < 0) {
@@ -49,6 +51,17 @@ export default ({ elements }) => {
                             </div>
                         </figure>
                     ))}
+                </div>
+                <div className="bullets-container flex justify-center mt-4 text-4xl">
+                    {elements.map((el, index) => {
+                        return <Bullet
+                            key={`bullet${index}`}
+                            className={`cursor-pointer ${index === active ? 'text-white' : 'text-gray-600'}`}
+                            onClick={() => { swipe(index) }}
+                        >
+
+                        </Bullet>
+                    })}
                 </div>
                 <ArrowRight className="arrow right-[-50px]" onClick={() => swipe('right')}></ArrowRight>
             </div>
