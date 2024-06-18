@@ -53,25 +53,25 @@ export default ({ elements }) => {
     }
 
 
-    useEffect(() => {
-        let id;
-        if (autoplayEnabled) {
-            let count = 0;
-            id = setInterval(() => {
-                count++;
-                if (count > elements.length) {
-                    count = 1
-                }
-                swipe(count);
-            }, 2000);
-            setAutoPlay(id);
-        } else {
-            clearInterval(autoPlay); // Clear the interval when autoplay is disabled
-        }
+    // useEffect(() => {
+    //     let id;
+    //     if (autoplayEnabled) {
+    //         let count = 0;
+    //         id = setInterval(() => {
+    //             count++;
+    //             if (count > elements.length) {
+    //                 count = 1
+    //             }
+    //             swipe(count);
+    //         }, 2000);
+    //         setAutoPlay(id);
+    //     } else {
+    //         clearInterval(autoPlay); // Clear the interval when autoplay is disabled
+    //     }
 
-        // Clean up the setInterval when the component unmounts
-        return () => clearInterval(id); // Use id here instead of autoPlay
-    }, [autoplayEnabled]);
+    //     // Clean up the setInterval when the component unmounts
+    //     return () => clearInterval(id); // Use id here instead of autoPlay
+    // }, [autoplayEnabled]);
 
 
 
